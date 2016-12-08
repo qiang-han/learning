@@ -122,33 +122,43 @@ J /= m;
 %grad = ((sigmoid(X*theta) - y)'*X)'/m + lambda*theta/m;
 %grad(1,1) = (((sigmoid(X*theta) - y)'*X)'/m)(1,1);
 
-D2 = 0;
-D1 = 0;
 for t=1:m
 	a1 = X(t,:);
 	z2 = Theta1*a1';
 	a2 = [1; sigmoid(z2)];
 	z3 = Theta2*a2;
-	a3 = sigmoid(z3);
-	delta3(:,t) = a3 - test_y(t,:)';
-	delta2(:,t) = Theta2'*(delta3(:,t).*sigmoidGradient(z2));
-	size(delta3(:,t))
-	size(delta2(:,t))
+	a3 = sigmoid(z3)
+	test_y(t,:)'
+	% delta3(:,t) = a3 - test_y(t,:)';
+	% delta2(:,t) = Theta2'*(delta3(:,t).*sigmoidGradient(z2));
+	delta3 = a3 - test_y(t,:)'
+	size(Theta2')
+	size(delta3)
+	size(z2)
+	size(sigmoidGradient(z2))
+	size(delta3.*sigmoidGradient(z2))
+	delta2 = Theta2'*(delta3.*sigmoidGradient(z2));
+	% delta2 = delta2(2:end)
+	% size(delta3(:,t))
+	% size(delta2(:,t))
+	% size(delta2)
+	% size(a2)
+	% [0; delta3(:,t)]'
+	% a2
+	% [0; delta3(:,t)]'*a2
+	% D2 += [0; delta3(:,t)]'*a2;
+	% D1 += delta2(:,t)'*a1'
 	delta2 = delta2(2:end);
-	size(delta2)
-	D2 += [0; delta3(:,t)]'*a2
-	%D1 += delta2(:,t)'*a1'
+	if t == 1
+		D2 = delta3 * a2';
+		D1 = delta2 * a1;
+	else
+		D2 += delta3 * a2';
+		D1 += delta2 * a1;
 end
 
-
-
-
-
-
-
-
-
-
+Theta1_grad = D1/m;
+Theta2_grad = D2/m;
 
 
 
